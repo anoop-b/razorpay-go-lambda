@@ -50,6 +50,7 @@ provider:
   environment:
     KEY: ${env:KEY}
     SECRET: ${env:SECRET}
+    ERPTOKEN: ${env:ERPTOKEN}
 
 package:
   exclude:
