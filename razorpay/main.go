@@ -1,9 +1,11 @@
 package main
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
 	"fmt"
+	"net/http"
 	"os"
 
 	"github.com/aws/aws-lambda-go/events"
@@ -21,10 +23,21 @@ type Customer struct {
 	Pan       string `json:"pan"`
 }
 
+// ErpNext payload struct
+type ErpNext struct {
+	CustomerID string `json:"customer_id"`
+	Plan       string `json:"plan"`
+	Pan        string `json:"pan"`
+}
+
+// RazorpayResponse to extract customer id only
+type RazorpayResponse struct {
+	CustomerID string `json:"customer_id"`
+}
+
 func handleRequest(ctx context.Context, request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
 	var payload Customer
 	json.Unmarshal([]byte(request.Body), &payload)
-
 	response := Rzpay(payload)
 	// convert map to json encoded bytes
 	jsonResponse, err := json.Marshal(response)
@@ -32,7 +45,8 @@ func handleRequest(ctx context.Context, request events.APIGatewayProxyRequest) (
 	if err != nil {
 		fmt.Println(err.Error())
 	}
-	fmt.Println(jsonResponse)
+
+	erpNext(payload, jsonResponse)
 
 	return events.APIGatewayProxyResponse{Body: string(jsonResponse), StatusCode: 200}, nil
 }
@@ -65,6 +79,44 @@ func Rzpay(payload Customer) map[string]interface{} {
 		fmt.Println(err)
 	}
 	return b
+}
+
+func erpNext(payload Customer, response []byte) {
+	var razorpayResponse RazorpayResponse
+	token := os.Getenv("ERPTOKEN")
+
+	err := json.Unmarshal(response, &razorpayResponse)
+	if err != nil {
+		fmt.Println("error Unmarshalling razorpay response", err)
+	}
+
+	data := ErpNext{
+		razorpayResponse.CustomerID,
+		payload.Plan,
+		payload.Pan,
+	}
+
+	jsonResponse, err := json.Marshal(data)
+	if err != nil {
+		fmt.Println("error Marshalling ErpNext payload", err)
+	}
+
+	body := bytes.NewReader(jsonResponse)
+	req, err := http.NewRequest("POST", "https://erpnext.com/api/resource/Member", body)
+	if err != nil {
+		fmt.Println("error creating request", err)
+	}
+
+	req.Header.Set("Authorization", token)
+	// req.SetBasicAuth("username","password") //fallback if auth header doesn't work
+	req.Header.Set("Content-Type", "application/json")
+
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		fmt.Println("error sending post request", err)
+	}
+
+	defer resp.Body.Close()
 }
 
 func main() {
