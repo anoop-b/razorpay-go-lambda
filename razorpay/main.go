@@ -11,12 +11,14 @@ import (
 	razorpay "github.com/razorpay/razorpay-go"
 )
 
-// Customer struct
+// Customer struct from frontend
 type Customer struct {
 	Name      string `json:"name"`
 	Email     string `json:"email"`
 	Contact   string `json:"contact"`
 	MaxAmount int    `json:"max_amount"`
+	Plan      string `json:"plan"`
+	Pan       string `json:"pan"`
 }
 
 func handleRequest(ctx context.Context, request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
