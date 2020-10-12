@@ -54,8 +54,9 @@ func Rzpay(payload Customer) map[string]interface{} {
 		"currency":    "INR",
 		"description": "Donation for Internet Freedom Foundation",
 		"subscription_registration": map[string]interface{}{
-			"method":     "emandate",
-			"max_amount": payload.MaxAmount,
+			"method":               "emandate",
+			"first_payment_amount": payload.MaxAmount,
+			"max_amount":           payload.MaxAmount,
 		},
 	}
 
