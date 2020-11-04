@@ -107,7 +107,7 @@ func erpNext(payload Customer, response []byte) {
 	}
 
 	body := bytes.NewReader(jsonResponse)
-	req, err := http.NewRequest("POST", "https://erpnext.com/api/resource/Member", body)
+	req, err := http.NewRequest("POST", "https://iff.erpnext.com/api/method/iff.api.create_member", body)
 	if err != nil {
 		fmt.Println("error creating request", err)
 	}
