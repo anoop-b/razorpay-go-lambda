@@ -18,14 +18,14 @@ service: razorpay
 
 # You can pin your service to only deploy with a specific Serverless version
 # Check out our docs for more details
-frameworkVersion: "=2.4.0"
+frameworkVersion: "=2.9.0"
 # frameworkVersion: ">=1.28.0 <2.0.0"
 
 provider:
   name: aws
   runtime: go1.x
   region: ap-south-1
-  stage: prod
+  stage: dev
   memorySize: 128
 
   # you can overwrite defaults here
@@ -50,7 +50,9 @@ provider:
   environment:
     KEY: ${env:KEY}
     SECRET: ${env:SECRET}
-    ERPTOKEN: ${env:ERPTOKEN}
+    ERP_KEY: ${env:ERP_KEY}
+    ERP_SECRET: ${env:ERP_SECRET}
+
 
 package:
   exclude:
