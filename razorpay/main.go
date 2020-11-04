@@ -87,7 +87,8 @@ func Rzpay(payload Customer) map[string]interface{} {
 
 func erpNext(payload Customer, response []byte) {
 	var razorpayResponse RazorpayResponse
-	token := os.Getenv("ERPTOKEN")
+	token := os.Getenv("ERP_KEY")
+	secret := os.Getenv("ERP_TOKEN")
 
 	err := json.Unmarshal(response, &razorpayResponse)
 	if err != nil {
@@ -111,8 +112,8 @@ func erpNext(payload Customer, response []byte) {
 		fmt.Println("error creating request", err)
 	}
 
-	req.Header.Set("Authorization", token)
-	// req.SetBasicAuth("username","password") //fallback if auth header doesn't work
+	// req.Header.Set("Authorization", token)
+	req.SetBasicAuth(token, secret) //fallback if auth header doesn't work
 	req.Header.Set("Content-Type", "application/json")
 
 	resp, err := http.DefaultClient.Do(req)
