@@ -48,7 +48,11 @@ func handleRequest(ctx context.Context, request events.APIGatewayProxyRequest) (
 
 	erpNext(payload, jsonResponse)
 
-	return events.APIGatewayProxyResponse{Body: string(jsonResponse), StatusCode: 200}, nil
+	return events.APIGatewayProxyResponse{Body: string(jsonResponse), StatusCode: 200, Headers: map[string]string{
+		"Access-Control-Allow-Headers": "Content-Type,X-Amz-Date,Authorization,X-Api-Key,x-requested-with",
+		"Access-Control-Allow-Origin":  "*",
+		"Access-Control-Allow-Methods": "POST,GET,OPTIONS",
+	}}, nil
 }
 
 // Rzpay function handles API calls to razorpay
