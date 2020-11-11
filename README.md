@@ -19,7 +19,7 @@ make build
 
 ## Usage
 
-Set the following env variables before depoying:
+Set the following env variables before deploying:
 
 - `KEY` = razorpay key
 - `SECRET` = razorpay secret
