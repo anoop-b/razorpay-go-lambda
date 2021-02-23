@@ -68,7 +68,7 @@ func Rzpay(payload Customer) map[string]interface{} {
 			"contact": payload.Contact,
 		},
 		"type":        "link",
-		"amount":      0,
+		"amount":      100,
 		"currency":    "INR",
 		"description": "Donation for Internet Freedom Foundation",
 		"subscription_registration": map[string]interface{}{
