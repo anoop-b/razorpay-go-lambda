@@ -25,7 +25,7 @@ provider:
   name: aws
   runtime: go1.x
   region: ap-south-1
-  stage: dev
+  stage: prod
   memorySize: 128
 
   # you can overwrite defaults here
