@@ -74,6 +74,7 @@ func Rzpay(payload Customer) map[string]interface{} {
 		"subscription_registration": map[string]interface{}{
 			"method":     "upi",
 			"max_amount": payload.MaxAmount,
+			"frequency":  "monthly",
 		},
 	}
 
