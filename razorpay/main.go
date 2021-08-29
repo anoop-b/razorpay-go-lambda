@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"log"
 	"os"
 
 	"github.com/aws/aws-lambda-go/events"
@@ -23,8 +24,10 @@ type Customer struct {
 
 func handleRequest(ctx context.Context, request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
 	var payload Customer
-	json.Unmarshal([]byte(request.Body), &payload)
-
+	if err := json.Unmarshal([]byte(request.Body), &payload); err != nil {
+		log.Fatal("[ERROR]", err.Error())
+		return events.APIGatewayProxyResponse{Body: err.Error(), StatusCode: 406}, err
+	}
 	response := Rzpay(payload)
 	// convert map to json encoded bytes
 	jsonResponse, err := json.Marshal(response)
